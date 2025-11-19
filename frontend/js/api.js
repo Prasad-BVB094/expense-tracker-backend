@@ -1,1 +1,1 @@
-const API = "http://localhost:5000";
+const API = "https://expense-tracker-backend-u6ie.onrender.com";
