@@ -7,7 +7,8 @@ exports.addExpense = async (req, res) => {
 
         const result = await pool.query(
             `INSERT INTO expenses (user_id, amount, category, date, note)
-             VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+             VALUES ($1, $2, $3, $4, $5) 
+             RETURNING id, user_id, amount, category, date, note`,
             [user_id, amount, category, date, note]
         );
 
@@ -126,18 +127,25 @@ exports.getDashboardData = async (req, res) => {
              ORDER BY month_date`,
             [user_id]
         );
-            const weekly = await pool.query(
-        `SELECT 
-            TO_CHAR(date, 'Dy') AS day,
-            SUM(amount)::numeric AS total,
-            date
-        FROM expenses
-        WHERE user_id = $1
-        AND date >= CURRENT_DATE - INTERVAL '6 days'
-        GROUP BY day, date
-        ORDER BY date`,
-        [user_id]
-    );
+        // Last 7 Days (including today, properly ordered)
+        const weekly = await pool.query(
+            `WITH last_7_days AS (
+                SELECT generate_series(
+                    CURRENT_DATE - INTERVAL '6 days',
+                    CURRENT_DATE,
+                    '1 day'::interval
+                )::date AS date
+            )
+            SELECT 
+                TO_CHAR(l.date, 'Dy') AS day,
+                COALESCE(SUM(e.amount), 0)::numeric AS total,
+                l.date
+            FROM last_7_days l
+            LEFT JOIN expenses e ON e.date = l.date AND e.user_id = $1
+            GROUP BY l.date
+            ORDER BY l.date`,
+            [user_id]
+        );
         const categoryBar = await pool.query(
         `SELECT category, SUM(amount)::numeric AS total
         FROM expenses
