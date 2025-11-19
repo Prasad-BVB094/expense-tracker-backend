@@ -14,9 +14,11 @@ const app = express();
 app.use(express.json());
 
 /*
-  CORS CONFIG:
-  - Allows all origins locally (fixes 127.0.0.1, localhost issues)
-  - In production, restricts to frontend domain (Render will set NODE_ENV=production)
+   CORS CONFIG (FIXED FOR NETLIFY + RENDER)
+   - Allows localhost during development
+   - Allows your Netlify domain
+   - Allows Netlify preview URLs
+   - Uses NODE_ENV for flexible behavior
 */
 
 const allowedOrigins = [
@@ -24,21 +26,27 @@ const allowedOrigins = [
     "http://127.0.0.1:5500",
     "http://localhost:5501",
     "http://127.0.0.1:5501",
-    process.env.CORS_ORIGIN // used after deployment
+    "https://expense-trackercc.netlify.app",   // <-- your frontend domain
+    process.env.CORS_ORIGIN
 ];
 
-// CORS Middleware
 app.use(
     cors({
         origin: (origin, callback) => {
             // Allow requests with no origin (mobile apps, curl)
             if (!origin) return callback(null, true);
 
-            if (allowedOrigins.includes(origin) || process.env.NODE_ENV === "development") {
+            // Allow local dev OR explicitly whitelisted domains
+            if (
+                allowedOrigins.includes(origin) ||
+                origin.endsWith("netlify.app") ||   // Allow Netlify deploy-previews
+                process.env.NODE_ENV === "development"
+            ) {
                 return callback(null, true);
             }
 
-            return callback(new Error("Not allowed by CORS"));
+            console.log("❌ BLOCKED BY CORS:", origin);
+            return callback(new Error("Not allowed by CORS: " + origin));
         },
         methods: ["GET", "POST", "PUT", "DELETE"],
         credentials: true,
@@ -70,7 +78,7 @@ app.get("/", (req, res) => {
     res.send("Expense Tracker Backend Running...");
 });
 
-// Start Server
+// Server Start
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
