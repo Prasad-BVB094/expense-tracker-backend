@@ -4,17 +4,21 @@
    UTILITY: Get today's date in IST timezone
 ------------------------------------------------------------------ */
 function getTodayIST() {
-    // Create date in IST using Intl API
-    const istDate = new Date().toLocaleString('en-CA', { 
-        timeZone: 'Asia/Kolkata',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-    });
-    
-    // Format is already YYYY-MM-DD from en-CA locale
-    return istDate.split(',')[0];
+    // Base time in UTC to avoid device timezone issues
+    const now = new Date();
+
+    // IST offset = UTC + 5 hours 30 minutes
+    const istTime = new Date(now.getTime() + (5.5 * 60 * 60 * 1000));
+
+    // Always extract date using UTC fields (stable for shifted timestamp)
+    const year = istTime.getUTCFullYear();
+    const month = String(istTime.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(istTime.getUTCDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
 }
+
+
 
 /* ------------------------------------------------------------------
    SET DEFAULT DATE ON PAGE LOAD
