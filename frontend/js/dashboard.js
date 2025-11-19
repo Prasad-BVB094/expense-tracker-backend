@@ -169,8 +169,11 @@ let weeklyChart;
 function updateWeeklyChart(weekly) {
     const ctx = document.getElementById("weeklyChart");
 
+    if (!weekly || weekly.length === 0) return;
+
+    // Process data - weekly array is already ordered by date from backend
     const labels = weekly.map(d => d.day);
-    const values = weekly.map(d => d.total);
+    const values = weekly.map(d => parseFloat(d.total) || 0);
 
     if (weeklyChart) weeklyChart.destroy();
 
@@ -179,6 +182,7 @@ function updateWeeklyChart(weekly) {
         data: {
             labels: labels,
             datasets: [{
+                label: 'Daily Spending',
                 data: values,
                 backgroundColor: COLORS.gradient.slice(0, 7),
                 borderRadius: 8,
@@ -187,12 +191,26 @@ function updateWeeklyChart(weekly) {
         },
         options: {
             ...CHART_OPTIONS,
-            plugins: { legend: { display: false } },
+            plugins: { 
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '₹' + context.parsed.y.toFixed(2);
+                        }
+                    }
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true,
                     grid: { color: 'rgba(0,0,0,0.05)' },
-                    ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary') }
+                    ticks: { 
+                        color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary'),
+                        callback: function(value) {
+                            return '₹' + value;
+                        }
+                    }
                 },
                 x: {
                     grid: { display: false },
@@ -287,14 +305,45 @@ function updateYearTrendChart(monthComparison) {
    WEEKDAY SPENDING PATTERN CHART
 --------------------------------------------------------- */
 let weekdayChart;
+
+
 function updateWeekdayChart(weekdayPattern) {
     const ctx = document.getElementById("weekdayChart");
-    
     if (!weekdayPattern || weekdayPattern.length === 0) return;
 
-    const labels = weekdayPattern.map(d => d.day_name.trim());
-    const values = weekdayPattern.map(d => parseFloat(d.avg_amount));
+    // Correct weekday order for radar chart
+    const dayOrder = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+    // Map to hold corrected data
+    const dayMap = new Map();
+
+    // 🔥 FIX BACKEND WRONG MAPPING:
+    // Backend day_num is shifted by -2, so we correct it by +2
+    weekdayPattern.forEach(d => {
+        const raw = Number(d.day_num);
+        const correctedDay = (raw + 2) % 7;   // <-- MAGIC FIX
+        const amount = parseFloat(d.avg_amount) || 0;
+
+        dayMap.set(correctedDay, {
+            day: dayOrder[correctedDay],
+            amount: amount
+        });
+    });
+
+    // Build ordered arrays for radar chart
+    const labels = [];
+    const values = [];
+
+    for (let i = 0; i < 7; i++) {
+        labels.push(dayOrder[i]);
+        if (dayMap.has(i)) {
+            values.push(dayMap.get(i).amount);
+        } else {
+            values.push(0);
+        }
+    }
+
+    // Render chart
     if (weekdayChart) weekdayChart.destroy();
 
     weekdayChart = new Chart(ctx, {
@@ -310,16 +359,22 @@ function updateWeekdayChart(weekdayPattern) {
                 pointBackgroundColor: '#764ba2',
                 pointBorderColor: '#fff',
                 pointBorderWidth: 2,
-                pointRadius: 4
+                pointRadius: 5,
+                pointHoverRadius: 7
             }]
         },
         options: {
-            ...CHART_OPTIONS,
+            responsive: true,
+            maintainAspectRatio: true,
             scales: {
                 r: {
                     beginAtZero: true,
                     grid: { color: 'rgba(0,0,0,0.1)' },
-                    ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary') }
+                    ticks: { backdropColor: 'transparent' },
+                    pointLabels: {
+                        color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary'),
+                        font: { size: 12, weight: '600' }
+                    }
                 }
             }
         }

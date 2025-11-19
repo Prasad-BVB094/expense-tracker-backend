@@ -11,7 +11,7 @@
 
 <!-- Sidebar -->
 <div class="sidebar">
-    <h2 class="sidebar-title">Expense<span>Track</span></h2>
+    <h2 class="sidebar-title">Expense<span>Tracker</span></h2>
 
     <ul class="menu">
         <li class="menu-item active">Dashboard</li>
@@ -73,6 +73,7 @@
     <!-- Charts -->
     <div class="charts-grid">
         
+        <!-- Row 1: 3 small charts -->
         <div class="chart-box chart-small">
             <h3>Category Breakdown</h3>
             <canvas id="categoryChart"></canvas>
@@ -83,40 +84,45 @@
             <canvas id="weekdayChart"></canvas>
         </div>
 
-        <div class="chart-box chart-medium">
-            <h3>Monthly Spending Trend</h3>
-            <canvas id="trendChart"></canvas>
-        </div>
-
         <div class="chart-box chart-small">
             <h3>Last 7 Days</h3>
             <canvas id="weeklyChart"></canvas>
         </div>
 
-        <!-- <div class="chart-box chart-small">
-            <h3>Category Growth Rate</h3>
-            <canvas id="categoryGrowthChart"></canvas>
-        </div> -->
+        <!-- Row 2: 1 large chart (full width) -->
+        <div class="chart-box chart-large">
+            <h3>Monthly Spending Trend</h3>
+            <canvas id="trendChart"></canvas>
+        </div>
 
+        <!-- Row 3: 1 large chart (full width) -->
         <div class="chart-box chart-large">
             <h3>Category Deep Dive</h3>
             <canvas id="categoryBarChart"></canvas>
         </div>
 
-        <div class="chart-box chart-medium">
+        <!-- Row 4: 1 large chart (full width) -->
+        <div class="chart-box chart-large">
             <h3>Spending Velocity Trend</h3>
             <canvas id="velocityChart"></canvas>
         </div>
+
+        <!-- Row 5: 1 large chart (full width) -->
+        <div class="chart-box chart-large">
+            <h3>Top 5 Largest Expenses</h3>
+            <div id="top-expenses-list"></div>
+        </div>
+
+        <!-- Commented charts for future use -->
+        <!-- <div class="chart-box chart-small">
+            <h3>Category Growth Rate</h3>
+            <canvas id="categoryGrowthChart"></canvas>
+        </div> -->
 
         <!-- <div class="chart-box insights-box">
             <h3>💡 Smart Insights</h3>
             <div id="smart-insights"></div>
         </div> -->
-
-        <div class="chart-box chart-large">
-            <h3>Top 5 Largest Expenses</h3>
-            <div id="top-expenses-list"></div>
-        </div>
 
     </div>
 
