@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker | Login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="auth-container" id="login-box">
+    <h2>Welcome Back</h2>
+
+    <div class="input-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="Enter email">
+    </div>
+
+    <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="Enter password">
+    </div>
+
+    <button class="btn" onclick="loginUser()">Login</button>
+
+    <p class="switch-text">
+        Don’t have an account?  
+        <a href="#" onclick="showRegister()">Register</a>
+    </p>
+</div>
+
+
+<!-- REGISTER BOX -->
+<div class="auth-container" id="register-box" style="display:none;">
+    <h2>Create Account</h2>
+
+    <div class="input-group">
+        <label>Name</label>
+        <input type="text" id="reg-name" placeholder="Full name">
+    </div>
+
+    <div class="input-group">
+        <label>Email</label>
+        <input type="email" id="reg-email" placeholder="Enter email">
+    </div>
+
+    <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="reg-password" placeholder="Create password">
+    </div>
+
+    <button class="btn" onclick="registerUser()">Register</button>
+
+    <p class="switch-text">
+        Already have an account?  
+        <a href="#" onclick="showLogin()">Login</a>
+    </p>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>

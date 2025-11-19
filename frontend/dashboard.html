@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Expense Tracker</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="dash-body">
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <h2 class="sidebar-title">Expense<span>Track</span></h2>
+
+    <ul class="menu">
+        <li class="menu-item active">Dashboard</li>
+        <li class="menu-item" onclick="location.href='add-expense.html'">Add Expense</li>
+        <li class="menu-item" onclick="location.href='view-expenses.html'">View Expenses</li>
+    </ul>
+
+    <button class="logout-btn" onclick="logoutUser()">Logout</button>
+</div>
+
+<!-- Main Content -->
+<div class="main-container">
+
+    <!-- Top Section -->
+    <div class="top-header">
+        <div>
+            <h1>Your Dashboard</h1>
+            <p class="tagline">Track, analyze, and manage your expenses smartly</p>
+        </div>
+        <div class="header-actions">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode"></button>
+            <div class="profile-icon" onclick="showProfile()" title="View Profile">JD</div>
+        </div>
+    </div>
+
+    <!-- Cards Section -->
+    <div class="cards">
+        <div class="card">
+            <h3>Today's Spend</h3>
+            <p id="today-total" class="value">₹0</p>
+        </div>
+
+        <div class="card">
+            <h3>This Month</h3>
+            <p id="month-total" class="value">₹0</p>
+        </div>
+
+        <div class="card">
+            <h3>This Year</h3>
+            <p id="year-total" class="value">₹0</p>
+        </div>
+
+        <div class="card">
+            <h3>Avg Daily (30d)</h3>
+            <p id="avg-daily" class="value">₹0</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Expenses</h3>
+            <p id="expense-count" class="value">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Highest Category</h3>
+            <p id="top-category" class="value">—</p>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-grid">
+        
+        <div class="chart-box chart-small">
+            <h3>Category Breakdown</h3>
+            <canvas id="categoryChart"></canvas>
+        </div>
+
+        <div class="chart-box chart-small">
+            <h3>Spending by Weekday</h3>
+            <canvas id="weekdayChart"></canvas>
+        </div>
+
+        <div class="chart-box chart-medium">
+            <h3>Monthly Spending Trend</h3>
+            <canvas id="trendChart"></canvas>
+        </div>
+
+        <div class="chart-box chart-small">
+            <h3>Last 7 Days</h3>
+            <canvas id="weeklyChart"></canvas>
+        </div>
+
+        <!-- <div class="chart-box chart-small">
+            <h3>Category Growth Rate</h3>
+            <canvas id="categoryGrowthChart"></canvas>
+        </div> -->
+
+        <div class="chart-box chart-large">
+            <h3>Category Deep Dive</h3>
+            <canvas id="categoryBarChart"></canvas>
+        </div>
+
+        <div class="chart-box chart-medium">
+            <h3>Spending Velocity Trend</h3>
+            <canvas id="velocityChart"></canvas>
+        </div>
+
+        <!-- <div class="chart-box insights-box">
+            <h3>💡 Smart Insights</h3>
+            <div id="smart-insights"></div>
+        </div> -->
+
+        <div class="chart-box chart-large">
+            <h3>Top 5 Largest Expenses</h3>
+            <div id="top-expenses-list"></div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Profile Modal -->
+<div id="profile-modal" class="profile-modal">
+    <div class="profile-modal-content">
+        <h2>My Profile</h2>
+        
+        <div class="input-group">
+            <label>Name</label>
+            <input type="text" id="profile-name">
+        </div>
+        
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="profile-email">
+        </div>
+        
+        <button class="btn" onclick="updateProfile()">Save Changes</button>
+        <button class="btn close-btn" onclick="closeProfile()">Cancel</button>
+    </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/profile.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>
